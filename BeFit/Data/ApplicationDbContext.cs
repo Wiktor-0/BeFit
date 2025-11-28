@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using BeFit.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using BeFit.Models;
+using System.Reflection.Emit;
 
 namespace BeFit.Data
 {
@@ -10,30 +12,14 @@ namespace BeFit.Data
             : base(options) { }
 
         public DbSet<Cwiczenia> Cwiczenia { get; set; } = default!;
-        public DbSet<Sesja> Sesje { get; set; } = default!;
-        public DbSet<SesjaCwiczenie> SesjeCwiczenia { get; set; } = default!;
+        public DbSet<TypCwiczenia> TypCwiczenia { get; set; } = default!;
+        public DbSet<SesjaCwiczenia> SesjeCwiczenia { get; set; } = default!;
 
-        protected override void OnModelCreating(ModelBuilder builder)
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            base.OnModelCreating(builder);
+            base.OnModelCreating(modelBuilder);
 
-            // (opcjonalnie) indeks/unikalność nazwy ćwiczenia
-            builder.Entity<Cwiczenia>()
-                   .HasIndex(e => e.Name);
-
-            // relacje SesjaCwiczenie -> Sesja (wiele zapisów w jednej sesji)
-            builder.Entity<SesjaCwiczenie>()
-                   .HasOne(sc => sc.Sesja)
-                   .WithMany()                 // możesz dodać w Sesja: public List<SesjaCwiczenie> Pozycje { get; set; } = new();
-                   .HasForeignKey(sc => sc.SesjaId)
-                   .OnDelete(DeleteBehavior.Cascade);
-
-            // relacje SesjaCwiczenie -> Cwiczenia (konkretny typ ćwiczenia)
-            builder.Entity<SesjaCwiczenie>()
-                   .HasOne(sc => sc.Cwiczenia)
-                   .WithMany()
-                   .HasForeignKey(sc => sc.CwiczeniaId)
-                   .OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<IdentityRole>().HasData(new IdentityRole() { Id = "500", Name = "Admin", NormalizedName = "ADMIN" });
         }
     }
 }
