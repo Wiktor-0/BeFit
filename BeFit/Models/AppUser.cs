@@ -1,6 +1,8 @@
-﻿namespace BeFit.Models
+﻿using Microsoft.AspNetCore.Identity;
+
+namespace BeFit.Models
 {
-    public class AppUser
+    public class AppUser : IdentityUser
     {
     }
 }

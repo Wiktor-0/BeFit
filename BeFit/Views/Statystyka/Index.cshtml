@@ -1,35 +1,28 @@
-﻿@model IEnumerable<BeFit.Models.TypCwiczenia>
+﻿@model IEnumerable<BeFit.Models.Statystyka>
 
-@{
-    ViewData["Title"] = "Index";
-}
+<h2>Statystyki ćwiczeń (ostatnie 4 tygodnie)</h2>
 
-<h1>Index</h1>
-
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
+<table class="table table-striped">
     <thead>
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Name)
-            </th>
-            <th></th>
+            <th>Ćwiczenie</th>
+            <th>Ile razy wykonane</th>
+            <th>Łączna liczba powtórzeń</th>
+            <th>Średnie obciążenie (kg)</th>
+            <th>Maksymalne obciążenie (kg)</th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
+        @foreach (var s in Model)
+        {
+            <tr>
+                <td>@s.Nazwa</td>
+                <td>@s.Count</td>
+                <td>@s.TotalReps</td>
+                <td>@(Math.Round(s.AvgWeight, 2))</td>
+                <td>@s.MaxWeight</td>
+            </tr>
+        }
     </tbody>
 </table>
+
