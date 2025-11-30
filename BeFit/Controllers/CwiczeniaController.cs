@@ -38,7 +38,7 @@ namespace BeFit.Controllers
         // GET: Cwiczenia/Create
         public IActionResult Create()
         {
-            ViewData["ExerciseTypeId"] = new SelectList(_context.Cwiczenia, "Id", "Name");
+            ViewData["TypCwiczeniaId"] = new SelectList(_context.TypCwiczenia, "Id", "Name");
             ViewData["SesjaCwiczeniaId"] = new SelectList(_context.SesjeCwiczenia, "Id", "Start");
             return View();
         }
@@ -48,16 +48,21 @@ namespace BeFit.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,SesjaCwiczeniaId,TypCwiczeniaId,Ciezar,Seria,Powtorzenia")] CwiczeniaDTO cwiczeniaDTO)
+        public async Task<IActionResult> Create(CwiczeniaDTO model)
         {
+            var userId = GetUserId();
+
+            bool sesjaOk = await _context.Cwiczenia
+                .AnyAsync(s => s.Id == model.SesjaCwiczeniaId && s.CreatedById == userId);
+
             Cwiczenia cwiczenia = new Cwiczenia()
             {
-                SesjaCwiczeniaId = cwiczeniaDTO.SesjaCwiczeniaId,
-                TypCwiczeniaId = cwiczeniaDTO.TypCwiczeniaId,
-                Ciezar = cwiczeniaDTO.Ciezar,
-                Seria = cwiczeniaDTO.Seria,
-                Powtorzenia = cwiczeniaDTO.Powtorzenia,
-                CreatedById = GetUserId()
+                SesjaCwiczeniaId = model.SesjaCwiczeniaId,
+                TypCwiczeniaId = model.TypCwiczeniaId,
+                Ciezar = model.Ciezar,
+                Seria = model.Seria,
+                Powtorzenia = model.Powtorzenia,
+                CreatedById = userId
             };
             if (ModelState.IsValid)
             {
@@ -65,9 +70,19 @@ namespace BeFit.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["TypCwiczeniaId"] = new SelectList(_context.Cwiczenia, "Id", "Name", cwiczenia.TypCwiczeniaId);
-            ViewData["SesjaCwiczeniaId"] = new SelectList(_context.SesjeCwiczenia, "Id", "Id", cwiczenia.SesjaCwiczeniaId);
-            return View(cwiczenia);
+            ViewData["TypCwiczeniaId"] = new SelectList(_context.TypCwiczenia, "Id", "Name", model.TypCwiczeniaId);
+            ViewData["SesjaCwiczeniaId"] = new SelectList(_context.SesjeCwiczenia.Where(s => s.CreatedById == userId), "Id", "Start", model.SesjaCwiczeniaId);
+            
+            var viewModel = new Cwiczenia
+            {
+                SesjaCwiczeniaId = model.SesjaCwiczeniaId,
+                TypCwiczeniaId = model.TypCwiczeniaId,
+                Ciezar = model.Ciezar,
+                Seria = model.Seria,
+                Powtorzenia = model.Powtorzenia
+            };
+
+            return View(viewModel);
         }
 
         // GET: Cwiczenia/Edit/5
@@ -78,15 +93,17 @@ namespace BeFit.Controllers
                 return NotFound();
             }
 
+            var userId = GetUserId();
+
             var cwiczenia = await _context.Cwiczenia
-                .Where(e => e.CreatedById == GetUserId())
                 .FirstOrDefaultAsync(m => m.Id==id);
+
             if (cwiczenia == null)
             {
                 return NotFound();
             }
-            ViewData["TypCwiczeniaId"] = new SelectList(_context.Cwiczenia, "Id", "Name", cwiczenia.TypCwiczeniaId);
-            ViewData["SesjaCwiczeniaId"] = new SelectList(_context.SesjeCwiczenia, "Id", "Start", cwiczenia.SesjaCwiczeniaId);
+            ViewData["TypCwiczeniaId"] = new SelectList(_context.TypCwiczenia, "Id", "Name", cwiczenia.TypCwiczeniaId);
+            ViewData["SesjaCwiczeniaId"] = new SelectList(_context.SesjeCwiczenia.Where(s => s.CreatedById == userId), "Id", "Start", cwiczenia.SesjaCwiczeniaId);
             return View(cwiczenia);
         }
 
@@ -138,7 +155,7 @@ namespace BeFit.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["TypCwiczeniaId"] = new SelectList(_context.Cwiczenia, "Id", "Name", cwiczenia.TypCwiczeniaId);
+            ViewData["TypCwiczeniaId"] = new SelectList(_context.TypCwiczenia, "Id", "Name", cwiczenia.TypCwiczeniaId);
             ViewData["SesjaCwiczeniaId"] = new SelectList(_context.SesjeCwiczenia, "Id", "Start", cwiczenia.SesjaCwiczeniaId);
             return View(cwiczenia);
         }

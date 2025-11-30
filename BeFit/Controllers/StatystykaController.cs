@@ -36,7 +36,7 @@ namespace BeFit.Controllers
             var statystyka = await _context.Cwiczenia
                 .Where(s => s.SesjaCwiczenia.Start >= fromDate)
                 .Where(s => s.CreatedById == GetUserId())
-                .GroupBy(s => s.TypCwiczenia.Nazwa)
+                .GroupBy(s => s.TypCwiczenia.Name)
                 .Select(g => new Statystyka
                 {
                     Nazwa = g.Key,

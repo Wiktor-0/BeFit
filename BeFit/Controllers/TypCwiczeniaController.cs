@@ -1,13 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using BeFit.Data;
+using BeFit.DTO;
+using BeFit.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using BeFit.Data;
-using BeFit.Models;
-using Microsoft.AspNetCore.Authorization;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace BeFit.Controllers
 {
@@ -19,6 +21,9 @@ namespace BeFit.Controllers
         {
             _context = context;
         }
+
+        private string GetUserId()
+            => User.FindFirstValue(ClaimTypes.NameIdentifier) ?? string.Empty;
 
         // GET: TypCwiczenia
         public async Task<IActionResult> Index()
@@ -54,9 +59,11 @@ namespace BeFit.Controllers
         // POST: TypCwiczenia/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize(Roles = "Admin")]
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin")]
+
         public async Task<IActionResult> Create([Bind("Id,Name")] TypCwiczenia typCwiczenia)
         {
             if (ModelState.IsValid)
@@ -67,6 +74,7 @@ namespace BeFit.Controllers
             }
             return View(typCwiczenia);
         }
+
 
         // GET: TypCwiczenia/Edit/5
         [Authorize(Roles = "Admin")]
@@ -88,9 +96,11 @@ namespace BeFit.Controllers
         // POST: TypCwiczenia/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize(Roles = "Admin")]
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin")]
+
         public async Task<IActionResult> Edit(int id, [Bind("Id,Name")] TypCwiczenia typCwiczenia)
         {
             if (id != typCwiczenia.Id)
@@ -141,9 +151,11 @@ namespace BeFit.Controllers
         }
 
         // POST: TypCwiczenia/Delete/5
+        [Authorize(Roles = "Admin")]
+        
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin")]
+        
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var typCwiczenia = await _context.TypCwiczenia.FindAsync(id);

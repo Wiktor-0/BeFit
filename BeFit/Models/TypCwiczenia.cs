@@ -9,6 +9,6 @@ namespace BeFit.Models
         [Required]
         [Display(Name = "Nazwa ćwiczenia")]
         [MaxLength(100)]
-        public string Nazwa { get; set; }
+        public string Name { get; set; } = string.Empty;
     }
 }

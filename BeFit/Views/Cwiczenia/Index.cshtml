@@ -7,7 +7,7 @@
 <h1>Trening</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create">Stwórz nowy</a>
 </p>
 <table class="table">
     <thead>
@@ -16,7 +16,7 @@
                 @Html.DisplayNameFor(model => model.SesjaCwiczenia)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.TypCwiczeniaId)
+                @Html.DisplayNameFor(model => model.TypCwiczenia)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Ciezar)
@@ -37,7 +37,7 @@
                 @Html.DisplayFor(modelItem => item.SesjaCwiczenia.Id)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.TypCwiczeniaId)
+                @Html.DisplayFor(modelItem => item.TypCwiczenia.Id)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Ciezar)
@@ -49,9 +49,9 @@
                 @Html.DisplayFor(modelItem => item.Powtorzenia)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                <a asp-action="Edit" asp-route-id="@item.Id">Edytuj</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">Szczegóły</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Usuń</a>
             </td>
         </tr>
 }

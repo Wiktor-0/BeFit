@@ -1,4 +1,4 @@
-using BeFit.Data;
+﻿using BeFit.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
@@ -10,7 +10,7 @@ namespace BeFit
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
@@ -31,6 +31,48 @@ namespace BeFit
             builder.Services.AddControllersWithViews();
 
             var app = builder.Build();
+
+
+            using (var scope = app.Services.CreateScope())
+            {
+                var services = scope.ServiceProvider;
+
+                var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+                var userManager = services.GetRequiredService<UserManager<AppUser>>();
+
+                string[] roles = { "Admin", "User" };
+
+                foreach (var role in roles)
+                {
+                    if (!await roleManager.RoleExistsAsync(role))
+                    {
+                        await roleManager.CreateAsync(new IdentityRole(role));
+                    }
+                }
+
+                string adminEmail = "admin@gmail.com";
+                string adminPassword = "Admin123!";
+
+                var admin = await userManager.FindByEmailAsync(adminEmail);
+
+                if (admin == null)
+                {
+                    admin = new AppUser
+                    {
+                        UserName = adminEmail,
+                        Email = adminEmail,
+                        EmailConfirmed = true
+                    };
+
+                    var result = await userManager.CreateAsync(admin, adminPassword);
+
+                    if (result.Succeeded)
+                    {
+                        await userManager.AddToRoleAsync(admin, "Admin");
+                    }
+
+                }
+            }
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
@@ -58,9 +100,9 @@ namespace BeFit
             app.UseStaticFiles();
 
             app.UseRouting();
-
-            app.UseAuthorization();
+            
             app.UseAuthentication();
+            app.UseAuthorization();
 
             app.MapControllerRoute(
                 name: "default",
