@@ -13,7 +13,7 @@ namespace BeFit.DTO
         {
             Id = sesjaCwiczenia.Id;
             Start = sesjaCwiczenia.Start;
-            Koniec = sesjaCwiczenia.End;
+            Koniec = sesjaCwiczenia.Koniec;
         }
     }
 }

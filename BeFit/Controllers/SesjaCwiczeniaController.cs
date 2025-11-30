@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -9,9 +6,11 @@ using BeFit.Data;
 using BeFit.Models;
 using System.Security.Claims;
 using BeFit.DTO;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BeFit.Controllers
 {
+    [Authorize]
     public class SesjaCwiczeniaController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -73,7 +72,7 @@ namespace BeFit.Controllers
             SesjaCwiczenia sesjaCwiczenia = new SesjaCwiczenia
             {
                 Start = sesjaCwiczeniaDTO.Start,
-                End = sesjaCwiczeniaDTO.Koniec,
+                Koniec = sesjaCwiczeniaDTO.Koniec,
                 CreatedById = GetUserId()
             };
             if (ModelState.IsValid)
@@ -118,7 +117,7 @@ namespace BeFit.Controllers
             SesjaCwiczenia sesjaCwiczenia = new SesjaCwiczenia
             {
                 Start = sesjaCwiczeniaDTO.Start,
-                End = sesjaCwiczeniaDTO.Koniec,
+                Koniec = sesjaCwiczeniaDTO.Koniec,
                 Cwiczenia = new List<Cwiczenia>(),
                 CreatedById = GetUserId()
             };

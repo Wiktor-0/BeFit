@@ -12,12 +12,15 @@ namespace BeFit.Models
 
         [Display(Name = "Data i godzina zakończenia")]
         [Required]
-        public DateTime End { get; set; }
+        public DateTime Koniec { get; set; }
+
         public List<Cwiczenia> Cwiczenia { get; set; } = new();
-        [Display(Name = "Created by")]
+
+        [Display(Name = "Stworzone przez")]
         public string CreatedById { get; set; } = string.Empty;
-        //[Display(Name = "Created by")]
-        //public virtual AppUser? CreatedBy { get; set; }
+
+        [Display(Name = "Stworzone przez")]
+        public virtual AppUser? CreatedBy { get; set; }
     }
 }
 

@@ -36,14 +36,14 @@ namespace BeFit.Controllers
             var statystyka = await _context.Cwiczenia
                 .Where(s => s.SesjaCwiczenia.Start >= fromDate)
                 .Where(s => s.CreatedById == GetUserId())
-                .GroupBy(s => s.TypCwiczenia.Name)
+                .GroupBy(s => s.TypCwiczenia.Nazwa)
                 .Select(g => new Statystyka
                 {
                     Nazwa = g.Key,
-                    Count = g.Count(),
-                    TotalReps = g.Sum(x => x.Seria * x.Powtorzenia),
-                    AvgWeight = g.Average(x => x.Ciezar),
-                    MaxWeight = g.Max(x => x.Ciezar),
+                    Liczba = g.Count(),
+                    AllPowtorzenia = g.Sum(x => x.Seria * x.Powtorzenia),
+                    SredniCieraz = g.Average(x => x.Ciezar),
+                    MaxCiezar = g.Max(x => x.Ciezar),
                 })
                 .ToListAsync();
 

@@ -1,10 +1,10 @@
-﻿@model IEnumerable<BeFit.Models.SesjaCwiczenia>
+﻿@model IEnumerable<BeFit.DTO.SesjaCwiczeniaDTO>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Czas treningu";
 }
 
-<h1>Index</h1>
+<h1>Czas Treningu</h1>
 
 <p>
     <a asp-action="Create">Create New</a>
@@ -16,7 +16,7 @@
                 @Html.DisplayNameFor(model => model.Start)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.End)
+                @Html.DisplayNameFor(model => model.Koniec)
             </th>
             <th></th>
         </tr>
@@ -28,7 +28,7 @@
                 @Html.DisplayFor(modelItem => item.Start)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.End)
+                @Html.DisplayFor(modelItem => item.Koniec)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
